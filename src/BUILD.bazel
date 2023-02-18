@@ -1,0 +1,30 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_ocaml//build:rules.bzl",
+     "ocaml_library",
+     "ocaml_module",
+     "ppx_module",
+     "ocaml_signature",
+)
+
+#################
+ocaml_library(
+    name     = "ppx_sexp_conv",
+    # archived = True,
+    manifest = [":Ppx_sexp_conv"]
+)
+
+######################## Modules & Signatures ########################
+ocaml_signature(
+    name          = "Ppx_sexp_conv_cmi",
+    src           = "ppx_sexp_conv.mli",
+    deps          = ["@ppxlib//lib/ppxlib"]
+)
+
+ppx_module(
+    name          = "Ppx_sexp_conv",
+    struct        = "ppx_sexp_conv.ml",
+    sig           = ":Ppx_sexp_conv_cmi",
+    deps          = ["//expander:ppx_sexp_conv_expander"]
+)
+
