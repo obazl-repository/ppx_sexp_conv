@@ -1,0 +1,320 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+load("@rules_ocaml//build:rules.bzl",
+     "ocaml_archive",
+     "ocaml_ns_archive",
+     "ocaml_module",
+     "ocaml_signature",
+     "ppx_executable",
+     "ppx_module",
+)
+
+LIBNAME = "PPX_SEXP_CONV_TEST_SEXP_GRAMMAR"
+DEPS_1 = [
+    "@base//lib/base",
+    "@expect_test_helpers_core//lib/expect_test_helpers_base"
+]
+
+build_test(
+    name = "sexp_grammar",
+    # name       = "ppx_sexp_conv_test_sexp_grammar",
+    # ns_name    = "ppx_sexp_conv_test_sexp_grammar",
+    targets = [
+        ":Test_allow_extra_fields",
+        ":Test_base_map",
+        ":Test_coverage_for_deriving",
+        ":Test_extension",
+        ":Test_functors",
+        ":Test_gadt",
+        ":Test_nonrec",
+        ":Test_opaque",
+        ":Test_polymorphic_variants",
+        ":Test_polymorphism",
+        ":Test_recursive_groups",
+        ":Test_regular_variants",
+        # ":Test_tags", # broken?
+        ":Test_test",
+        ":Test_variants_more"
+    ],
+)
+
+######################## Modules & Signatures ########################
+ocaml_signature(
+    name          = "Test_allow_extra_fields.cmi",
+    src           = "test_allow_extra_fields.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_allow_extra_fields",
+    struct        = "test_allow_extra_fields.ml",
+    sig           = ":Test_allow_extra_fields.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_base_map.cmi",
+    src           = "test_base_map.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_base_map",
+    struct        = "test_base_map.ml",
+    sig           = ":Test_base_map.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_coverage_for_deriving.cmi",
+    src           = "test_coverage_for_deriving.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_coverage_for_deriving",
+    struct        = "test_coverage_for_deriving.ml",
+    sig           = ":Test_coverage_for_deriving.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_extension.cmi",
+    src           = "test_extension.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_extension",
+    struct        = "test_extension.ml",
+    sig           = ":Test_extension.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_functors.cmi",
+    src           = "test_functors.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_functors",
+    struct        = "test_functors.ml",
+    sig           = ":Test_functors.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_gadt.cmi",
+    src           = "test_gadt.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_gadt",
+    struct        = "test_gadt.ml",
+    sig           = ":Test_gadt.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_nonrec.cmi",
+    src           = "test_nonrec.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_nonrec",
+    struct        = "test_nonrec.ml",
+    sig           = ":Test_nonrec.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_opaque.cmi",
+    src           = "test_opaque.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_opaque",
+    struct        = "test_opaque.ml",
+    sig           = ":Test_opaque.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_polymorphic_variants.cmi",
+    src           = "test_polymorphic_variants.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_polymorphic_variants",
+    struct        = "test_polymorphic_variants.ml",
+    sig           = ":Test_polymorphic_variants.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+    ppx_args      = ["-inline-test-lib", LIBNAME]
+)
+
+ocaml_signature(
+    name          = "Test_polymorphism.cmi",
+    src           = "test_polymorphism.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_polymorphism",
+    struct        = "test_polymorphism.ml",
+    sig           = ":Test_polymorphism.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_recursive_groups.cmi",
+    src           = "test_recursive_groups.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_recursive_groups",
+    struct        = "test_recursive_groups.ml",
+    sig           = ":Test_recursive_groups.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_regular_variants.cmi",
+    src           = "test_regular_variants.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_regular_variants",
+    struct        = "test_regular_variants.ml",
+    sig           = ":Test_regular_variants.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+    ppx_args      = ["-inline-test-lib", LIBNAME]
+)
+
+ocaml_signature(
+    name          = "Test_tags.cmi",
+    src           = "test_tags.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_tags",
+    struct        = "test_tags.ml",
+    sig           = ":Test_tags.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+    ppx_args      = ["-inline-test-lib", LIBNAME]
+)
+
+ocaml_signature(
+    name          = "Test_test.cmi",
+    src           = "test_test.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_test",
+    struct        = "test_test.ml",
+    sig           = ":Test_test.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_signature(
+    name          = "Test_variants_more.cmi",
+    src           = "test_variants_more.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Test_variants_more",
+    struct        = "test_variants_more.ml",
+    sig           = ":Test_variants_more.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+
+###############
+ppx_executable(
+    name    = "ppx_1.exe",
+    main    = ":Ppx_driver",
+    prologue = [
+        "@ppx_expect//lib/ppx_expect",
+        "//src:ppx_sexp_conv",
+    ],
+)
+
+#############
+ppx_module(
+    name       = "Ppx_driver",
+    struct     = ":ppx_driver.ml",
+    visibility = ["//visibility:public"],
+    deps       = ["@ppxlib//lib/ppxlib"],
+)
+
+########
+genrule(
+    name = "__ppx_driver__",
+    outs = ["ppx_driver.ml"],
+    cmd = "\n".join([
+        "echo \"(* GENERATED FILE - DO NOT EDIT *)\" > \"$@\"",
+        "echo \"let () = Ppxlib.Driver.standalone ()\" >> \"$@\"",
+    ])
+)
+
+############################# Rules ##################################
+
+########
+# genrule(
+#     outs  = [
+#         "regular_vs_polymorphic_variants.diff"
+#     ],
+#     name  = "__regular_vs_polymorphic_variants.diff__",
+#     srcs  = [
+#         ":test_regular_variants.ml",
+#         ":test_polymorphic_variants.ml"
+#     ],
+#     cmd_bash   = " ".join([
+#         "$(execpath (:FOO))",
+#         "$(SRCS);",
+#         "cp regular_vs_polymorphic_variants.diff  $@",
+#     ]),
+#     tools   = [(:FOO)]
+# )
+

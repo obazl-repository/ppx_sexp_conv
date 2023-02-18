@@ -1,0 +1,19 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_ocaml//build:rules.bzl",
+     "ocaml_library",
+     "ppx_module",
+)
+
+ocaml_library(
+    name     = "ppx_sexp_conv_lib",
+    # archived = True,
+    manifest = [":Ppx_sexp_conv_lib"]
+)
+
+ppx_module(
+    name          = "Ppx_sexp_conv_lib",
+    struct        = "ppx_sexp_conv_lib.ml",
+    deps          = ["@sexplib0//lib/sexplib0"]
+)
+

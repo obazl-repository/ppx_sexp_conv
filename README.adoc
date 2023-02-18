@@ -1,0 +1,99 @@
+= ppx_sexp_conv (Bazelized)
+
+This fork is identical to the
+link:https://github.com/janestreet/ppx_sexp_conv[upstream] repo except
+for the addition of files needed to support
+link:https://bazel.build/[Bazel] builds.
+
+WARNING: The upsteam repo allows development code on the main branch
+(which is named `master`). The `bazel` branch of this repo corresponds
+to `master` of upstream; the most recent stable version is branch `v0.15.1/bazel`.
+
+== Usage
+
+This repository depends on the following:
+
+  "base"     {>= "v0.15" & < "v0.16"}
+  "sexplib0" {>= "v0.15" & < "v0.16"}
+  "dune"     {>= "2.0.0"}
+  "ppxlib"   {>= "0.26.0"}
+
+Add those to your OPAM switch and
+link:https://github.com/obazl/tools_obazl/HACKING.adoc#OPAM_integration[refresh
+your coswitch], excluding `ppx_sexp_conv`.
+
+.WORKSPACE.bazel
+----
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+        name = "ppx_sexp_conv",
+        remote = "https://github.com/obazl-repository/ppx_sexp_conv",
+        branch = "v0.15.1/bazel"
+    )
+----
+
+
+.BUILD.bazel
+----
+ppx_executable(
+    name = "foo",
+    ...
+    prologue = ["@ppx_sexp_conv//lib/ppx_sexp_conv", ...]
+    ...
+)
+----
+
+[CAUTION]
+====
+If your code contains reference to the source file name, e.g.
+
+.test/expansion.ml
+----
+    (let error_source__002_ = "expansion.ml.Abstract.t" in
+----
+
+then you must tell the PPX which file name to use; otherwise it will
+include the Bazel-relative filename path, which will cause the `.corrected`
+output to differ from the input.  Add the following to the relevant `ocaml_module` target:
+
+    ppx_args      = ["-loc-filename", "<FILENAME>"]
+
+Without this, the corrected code will contain something like:
+
+----
+    (let error_source__002_ =
+       "bazel-out/darwin-fastbuild/bin/test/__ppx/expansion.ml.Abstract.t" in
+----
+
+See link:test/BUILD.bazel[] for an example.
+
+====
+
+
+== Notes on the Bazel build program
+
+=== parsimony
+
+Dune library stanzas apply their options, deps, etc. to everything.
+With Bazel we can be more refined. See link:test/BUILD.bazel[] for an
+example. The `dune` file contains `(flags :standard -w -30)`; the
+Bazel file only applies it where needed, for target
+`//test:Nonrec_test`. Similarly for dependencies; for example,
+`expect_test_helpers_core` and `base` are only needed for one target
+each.
+
+
+
+=== deps
+
+The dune file for `ppx_sexp_conv_expander` (which is `expander/dune`) lists:
+
+    (ppx_runtime_libraries ppx_sexp_conv.runtime-lib sexplib0)
+
+But `ppx_sexp_conv.runtime-lib` already depends on `sexplib0`; since
+the `OBazl` ruleset automatically handlers transitivity of
+dependencies, we do not need to list `sexplib0` as a dependency of
+anything except `//runtime-lib:Ppx_sexp_conv_lib`.
+
+[Is the runtime-lib ever needed?]

@@ -1,0 +1,274 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_ocaml//build:rules.bzl",
+     "ocaml_archive",
+     "ocaml_ns_library",
+     "ocaml_module",
+     "ocaml_signature",
+     "ppx_executable",
+     "ppx_module",
+)
+
+DEPS_1 = [
+    "@base//lib/base",
+    "@ppxlib//lib/ppxlib",
+    "@ppxlib//lib/metaquot_lifters"
+]
+
+#################
+ocaml_ns_library(
+    name     = "ppx_sexp_conv_expander",
+    # archived = True,
+    ns_name  = "ppx_sexp_conv_expander",
+    manifest = [
+        ":Attrs",
+        ":Conversion",
+        ":Expand_of_sexp",
+        ":Expand_sexp_of",
+        ":Fresh_name",
+        ":Helpers",
+        ":Lifted",
+        ":Ppx_sexp_conv_expander",
+        ":Ppx_sexp_conv_grammar",
+        ":Record_field_attrs",
+        ":Renaming"
+    ],
+)
+
+######################## Modules & Signatures ########################
+ocaml_signature(
+    name          = "Attrs.cmi",
+    src           = "attrs.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Attrs",
+    struct        = "attrs.ml",
+    sig           = ":Attrs.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Conversion.cmi",
+    src           = "conversion.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Conversion",
+    struct        = "conversion.ml",
+    sig           = ":Conversion.cmi",
+    deps          = DEPS_1 + [
+        ":Helpers"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Expand_of_sexp.cmi",
+    src           = "expand_of_sexp.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Expand_of_sexp",
+    struct        = "expand_of_sexp.ml",
+    sig           = ":Expand_of_sexp.cmi",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Conversion",
+        ":Fresh_name",
+        ":Helpers",
+        ":Lifted",
+        ":Record_field_attrs"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Expand_sexp_of.cmi",
+    src           = "expand_sexp_of.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Expand_sexp_of",
+    struct        = "expand_sexp_of.ml",
+    sig           = ":Expand_sexp_of.cmi",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Conversion",
+        ":Fresh_name",
+        ":Helpers",
+        ":Lifted",
+        ":Record_field_attrs",
+        ":Renaming"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Fresh_name.cmi",
+    src           = "fresh_name.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Fresh_name",
+    struct        = "fresh_name.ml",
+    sig           = ":Fresh_name.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Helpers.cmi",
+    src           = "helpers.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Helpers",
+    struct        = "helpers.ml",
+    sig           = ":Helpers.cmi",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Fresh_name"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Lifted.cmi",
+    src           = "lifted.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Lifted",
+    struct        = "lifted.ml",
+    sig           = ":Lifted.cmi",
+    deps          = DEPS_1 + [
+        ":Helpers"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Ppx_sexp_conv_expander.cmi",
+    src           = "ppx_sexp_conv_expander.mli",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Record_field_attrs"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Ppx_sexp_conv_expander",
+    struct        = "ppx_sexp_conv_expander.ml",
+    sig           = ":Ppx_sexp_conv_expander.cmi",
+    deps          = DEPS_1 + [
+        ":Expand_of_sexp",
+        ":Expand_sexp_of",
+        ":Ppx_sexp_conv_grammar",
+        ":Attrs",
+        ":Record_field_attrs"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Ppx_sexp_conv_grammar.cmi",
+    src           = "ppx_sexp_conv_grammar.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Ppx_sexp_conv_grammar",
+    struct        = "ppx_sexp_conv_grammar.ml",
+    sig           = ":Ppx_sexp_conv_grammar.cmi",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Record_field_attrs"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Record_field_attrs.cmi",
+    src           = "record_field_attrs.mli",
+    deps          = DEPS_1 + [
+        ":Lifted"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Record_field_attrs",
+    struct        = "record_field_attrs.ml",
+    sig           = ":Record_field_attrs.cmi",
+    deps          = DEPS_1 + [
+        ":Attrs",
+        ":Lifted"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_signature(
+    name          = "Renaming.cmi",
+    src           = "renaming.mli",
+    deps          = DEPS_1 + [
+        ":Fresh_name"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+ocaml_module(
+    name          = "Renaming",
+    struct        = "renaming.ml",
+    sig           = ":Renaming.cmi",
+    deps          = DEPS_1 + [
+        ":Fresh_name"
+    ],
+    ppx           = ":ppx.exe",
+)
+
+###############
+ppx_executable(
+    name    = "ppx.exe",
+    main    = ":Ppx_driver",
+    prologue = [
+        "@ppxlib//lib/metaquot",
+        "@ppxlib//lib/traverse"
+    ],
+)
+
+#############
+ppx_module(
+    name       = "Ppx_driver",
+    struct     = ":ppx_driver.ml",
+    visibility = ["//visibility:public"],
+    deps       = ["@ppxlib//lib/ppxlib"],
+)
+
+########
+genrule(
+    name = "__ppx_driver__",
+    outs = ["ppx_driver.ml"],
+    cmd = "\n".join([
+        "echo \"(* GENERATED FILE - DO NOT EDIT *)\" > \"$@\"",
+        "echo \"let () = Ppxlib.Driver.standalone ()\" >> \"$@\"",
+    ])
+)
+

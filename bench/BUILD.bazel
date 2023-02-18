@@ -1,0 +1,76 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_ocaml//build:rules.bzl",
+     "ocaml_archive",
+     "ocaml_ns_archive",
+     "ocaml_module",
+     "ocaml_signature",
+     "ppx_executable",
+     "ppx_module",
+)
+
+LIBNAME = "PPX_SEXP_CONV_BENCH"
+PPX_ARGS = ["-inline-test-lib", LIBNAME]
+DEPS_1 = [
+    "@base//lib/base",
+    "@parsexp//lib/parsexp"
+]
+
+#############################
+####  Aggregate Targets  ####
+
+#################
+ocaml_ns_archive(  #0
+    name       = "ppx_sexp_conv_bench",
+    ns_name    = "ppx_sexp_conv_bench",
+    manifest = [
+        ":Ppx_sexp_conv_bench"
+    ],
+)
+
+######################## Modules & Signatures ########################
+ocaml_signature(
+    name          = "Ppx_sexp_conv_bench.cmi",
+    src           = "ppx_sexp_conv_bench.mli",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+)
+
+ocaml_module(
+    name          = "Ppx_sexp_conv_bench",
+    struct        = "ppx_sexp_conv_bench.ml",
+    sig           = ":Ppx_sexp_conv_bench.cmi",
+    deps          = DEPS_1,
+    ppx           = ":ppx_1.exe",
+    ppx_args      = PPX_ARGS + []
+)
+
+###############
+ppx_executable(
+    name    = "ppx_1.exe",
+    main    = ":Ppx_driver",
+    prologue = [
+        "@ppx_bench//lib/ppx_bench",
+        "@ppx_compare//lib/ppx_compare",
+        "//src:ppx_sexp_conv"
+    ],
+)
+
+#############
+ppx_module(
+    name       = "Ppx_driver",
+    struct     = ":ppx_driver.ml",
+    visibility = ["//visibility:public"],
+    deps       = ["@ppxlib//lib/ppxlib"],
+)
+
+########
+genrule(
+    name = "__ppx_driver__",
+    outs = ["ppx_driver.ml"],
+    cmd = "\n".join([
+        "echo \"(* GENERATED FILE - DO NOT EDIT *)\" > \"$@\"",
+        "echo \"let () = Ppxlib.Driver.standalone ()\" >> \"$@\"",
+    ])
+)
+
