@@ -7,7 +7,10 @@ link:https://bazel.build/[Bazel] builds.
 
 WARNING: The upsteam repo allows development code on the main branch
 (which is named `master`). The `bazel` branch of this repo corresponds
-to `master` of upstream; the most recent stable version is branch `v0.15.1/bazel`.
+to `master` of upstream; the most recent stable version is branch
+`v0.15.1/bazel`. The test targets on the master will not build, since
+they depend on dev versions of pkgs that are not yet released to opam
+(e.g. `sexplib0` v0.16).
 
 == Usage
 
